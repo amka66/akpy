@@ -1,0 +1,17 @@
+[project]
+name = "akpy"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Amir Kantor", email = "amir.kantor@gmail.com" }
+]
+requires-python = ">=3.12"
+dependencies = []
+
+[project.scripts]
+akpy = "akpy:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
