@@ -1,8 +1,10 @@
 # akpy #
 
-> This repo is primarily for personal use.
-> It compiles material I read over the years, which shaped the way I work.
-> It is included here for public use in case it may help anyone set up their development environment more to their liking.
+> ___A blueprint for Python projects including useful definitions and utilities for Python development___
+
+This repo is primarily for personal use.
+It compiles different sources from which I learned over the years that shaped the way I work.
+It is included here for public use in case anyone finds it useful.
 
 ## Overview ##
 

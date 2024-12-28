@@ -1,7 +1,7 @@
 [project]
 name = "akpy"
 version = "0.1.0"
-description = "Blueprint of a Python project (a packaged Python app)"
+description = "A blueprint for Python projects including useful definitions and utilities for Python development"
 readme = "README.md"
 authors = [
     { name = "Amir Kantor", email = "amir.kantor@gmail.com" }
