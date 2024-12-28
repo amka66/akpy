@@ -5,12 +5,25 @@ build/
 dist/
 wheels/
 *.egg-info
+.mypy_cache/
 
 # Virtual environments
 .venv
 
-# Environment variables at root dir
-/.env
+# Environment variables (except in user-specific dirs)
+.env
+!/users/*/**/.env
+
+# VSCode settings (except in user-specific dirs)
+.vscode/
+!/users/*/**/.vscode/
 
 # Secret files
 .secret*
+
+# Log files
+logs/
+*.log
+
+# Macos auxiliary files
+.DS_Store
