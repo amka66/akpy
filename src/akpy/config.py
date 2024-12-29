@@ -3,11 +3,11 @@ Abstract base classes for storing project information, secrets, and settings.
 Concrete classes for general information and settings.
 """
 
-#
+
 #
 # IMPORTS
 #
-
+#
 
 import os
 from abc import ABC
