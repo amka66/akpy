@@ -18,7 +18,7 @@
         },
     },
 
-    // "python.defaultInterpreterPath": "${workspaceFolder}/.venv",                // default: python
+    "python.defaultInterpreterPath": "${workspaceFolder}/.venv",                // default: python
     // "python.venvFolders": [  // only per user?                                  // default: []
     //     "${workspaceFolder}",
     // ],
@@ -31,7 +31,7 @@
     "python.testing.unittestEnabled": true,                                     // <-- true, {false}
     "python.testing.pytestEnabled": true,                                       // <-- true, {false}
 
-    // Ruff extension may be enabled / disabled
+    // "ruff.enable": true,  // enable / disable extension instead
     "ruff.importStrategy": "useBundled",                                        // useBundled, {fromEnvironment}
 
     // "pylint.enabled": true,  // enable / disable extension instead
