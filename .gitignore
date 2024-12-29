@@ -8,23 +8,15 @@ wheels/
 .mypy_cache/
 .pytest_cache/
 
-# Virtual environments
-.venv
-
-# Environment variables (except in user-specific dirs)
-.env
-!/users/*/**/.env
-
-# VSCode settings (except in user-specific dirs)
-.vscode/
-!/users/*/**/.vscode/
-
-# Secret files
-.secret*
-
 # Log files
 logs/
 *.log
 
-# Macos auxiliary files
+# Macos-generated files
 .DS_Store
+
+# Virtual environments
+.venv
+
+# Secret files
+.secret*
