@@ -1,21 +1,29 @@
 {
     "workbench.colorTheme": "Default High Contrast",
     "workbench.colorCustomizations": {
-        "titleBar.activeBackground": "#a76a00",
+        "titleBar.activeBackground": "#a7005c",
     },
     // "explorer.confirmDelete": false,
     "jupyter.askForKernelRestart": false,
 
     "[python]": {
-        "editor.defaultFormatter": "charliermarsh.ruff",
+        "editor.defaultFormatter": "charliermarsh.ruff",                        // alt., ms-python.black-formatter
         "editor.formatOnSave": true,                                            // <-- true, {false}
         "editor.formatOnSaveMode": "file",                                      // {file}, modifications, modificationsIfAvailable
         "editor.codeActionsOnSave": {
-            "source.fixAll": "explicit",                                        // <-- explicit, always, never ??
+            "source.fixAll": "explicit",                                        // <-- explicit, always, never (?)
             "source.organizeImports": "explicit",                               // <-- explicit, always, never
             "source.unusedImports": "explicit",                                 // <-- explicit, always, never
             "source.convertImportFormat": "never",                              // <-- explicit, always, never
         },
+    },
+
+    "notebook.formatOnSave.enabled": true,                                      // <-- true, false (?)
+    "notebook.codeActionsOnSave": {
+        "notebook.source.fixAll": "explicit",                                   // <-- explicit, always, never (?)
+        "notebook.source.organizeImports": "explicit",                          // <-- explicit, always, never (?)
+        "notebook.source.unusedImports": "explicit",                            // <-- explicit, always, never (?)
+        "notebook.source.convertImportFormat": "never",                         // <-- explicit, always, never (?)
     },
 
     "python.defaultInterpreterPath": "${workspaceFolder}/.venv",                // default: python
@@ -33,6 +41,16 @@
 
     // "ruff.enable": true,  // enable / disable extension instead
     "ruff.importStrategy": "useBundled",                                        // useBundled, {fromEnvironment}
+
+    // // "black-formatter.enabled": false,  // enable / disable extension instead
+    // "black-formatter.importStrategy": "useBundled",                             // {useBundled}, fromEnvironment
+
+    // "isort.enabled": true,  // enable / disable extension instead
+    "isort.importStrategy": "useBundled",                                       // {useBundled}, fromEnvironment
+    "isort.args": [
+        "--profile",
+        "black"
+    ],
 
     // "pylint.enabled": true,  // enable / disable extension instead
     "pylint.ignorePatterns": [                                                  // <-- default: []
@@ -99,12 +117,6 @@
     ],
     "cSpell.userWords": [  // only per user?
     ],
-
-    "notebook.formatOnSave.enabled": true,
-    "notebook.codeActionsOnSave": {
-        "notebook.source.fixAll": "explicit",
-        "notebook.source.organizeImports": "explicit",
-    },
 
     "git.openRepositoryInParentFolders": "always",
 

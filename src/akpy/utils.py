@@ -2,102 +2,45 @@
 Utility functions and related definitions
 """
 
-
-#
-# IMPORTS
-#
-#
-
 import logging
 import os
 import random
 import string
 import sys
 import time
-from enum import Enum
 from itertools import zip_longest
 from pathlib import Path
-from typing import Any, Iterable, Union
+from typing import Any, Iterable, Optional, Union
 
-from .config import LoggingLevel
+from .config import GeneralInfo, GeneralSettings, LoggingLevel
 
-#
-#
-# TYPES
-#
+int0 = int  # type hint to denote integer >= 0
 
 
-int0 = int  # integer >= 0
+# Get general info and settings
+_info = GeneralInfo()
+_settings = GeneralSettings()
 
 
-#
-# CONSTANTS
-#
-
-
-LOGGING_FORMATTER_STR = "%(asctime)sZ - %(name)s - %(levelname)s - %(message)s"
-
-
-#
-# TYPES
-#
-
-
-class Color(str, Enum):
-    GRAY = "\033[90m"
-    RED = "\033[91m"
-    GREEN = "\033[92m"
-    YELLOW = "\033[93m"
-    BRIGHT = "\033[1m"
-    UNDERLINE = "\033[4m"
-    RESET = "\033[0m"
-
-
-#
-# FUNCTIONS
-#
-
-
-def colorize(text: str, color: Color) -> str:
-    return color + text + Color.RESET
-
-
-def gray(text: str) -> str:
-    return colorize(text, Color.GRAY)
-
-
-def red(text: str) -> str:
-    return colorize(text, Color.RED)
-
-
-def green(text: str) -> str:
-    return colorize(text, Color.GREEN)
-
-
-def yellow(text: str) -> str:
-    return colorize(text, Color.YELLOW)
-
-
-def bright(text: str) -> str:
-    return colorize(text, Color.BRIGHT)
-
-
-def underline(text: str) -> str:
-    return colorize(text, Color.UNDERLINE)
-
-
-def print_(s: str, **kwargs: Any) -> None:
-    print(s, flush=True, **kwargs)
+def get_log_file(logger_name: str) -> Path:
+    """Return the log file path"""
+    return _info.log_dir / f"{logger_name}.log"
 
 
 def create_logger(
     name: str,
     *,
-    log_file: Union[str, Path],
-    formatter_str: str,
-    level: LoggingLevel,  # note union
+    log_file: Optional[Union[str, Path]] = None,
+    formatter_str: str = "%(asctime)sZ - %(name)s - %(levelname)s - %(message)s",
+    level: LoggingLevel = _settings.logging_level,
 ) -> logging.Logger:
-    log_file = Path(log_file)
+    """
+    Create and initialize a text logger
+    """
+    if log_file is None:
+        log_file = get_log_file(name)
+    else:
+        log_file = Path(log_file)
     formatter = logging.Formatter(formatter_str)
     formatter.converter = time.gmtime
     logger = logging.getLogger(name)
@@ -110,15 +53,15 @@ def create_logger(
     )
     file_log_handler.setFormatter(formatter)
     logger.addHandler(file_log_handler)
-    stdout_log_handler = logging.StreamHandler(stream=sys.stdout)
-    stdout_log_handler.setFormatter(formatter)
-    logger.addHandler(stdout_log_handler)
+    stderr_log_handler = logging.StreamHandler(stream=sys.stderr)
+    stderr_log_handler.setFormatter(formatter)
+    logger.addHandler(stderr_log_handler)
     logger.setLevel(level)
     return logger
 
 
-def get_random_string(length: int0) -> str:
-    # choose from all lowercase letters, uppercase letters, and digits
+def generate_random_string(length: int0) -> str:
+    """Generate a random string including lowercase letters, uppercase letters, and digits"""
     letters = string.ascii_letters + string.digits
     result_str = "".join(random.choice(letters) for _ in range(length))
     return result_str

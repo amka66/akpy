@@ -8,12 +8,6 @@ possibly including more parameters (and possibly a specialization
 of this type).
 """
 
-
-#
-# IMPORTS
-#
-#
-
 import json
 import pickle
 from pathlib import Path
@@ -35,17 +29,17 @@ from .read import (
 )
 from .utils import compare_iterables
 
-#
-#
-# FILE WRITE FUNCTIONS
-#
-
 
 class ReadVerificationError(IOError):
     """
     Raised when the verification of the corresponding read operation
     on the newly created data fails
     """
+
+
+#
+# Functions for writing to different file formats
+#
 
 
 # *.txt
@@ -111,12 +105,12 @@ def write_dataframe_to_jsonlines(
 
 # *.pickle
 def write_pickle(
-    obj: Any, file_out: Path, verify: bool = False
+    obj: Any, file_out: Path, verify: bool = False, *, trusted: bool = False
 ) -> Callable[[Path], Any]:
     """Write object to pickle file and optionally verify read operation"""
     with open(file_out, "wb") as f_d:
         pickle.dump(obj, f_d)
-    if verify and read_pickle(file_out) != obj:
+    if verify and read_pickle(file_out, trusted=trusted) != obj:
         raise ReadVerificationError
     return read_pickle
 
@@ -126,13 +120,15 @@ def write_jsonpickle(
     obj: Any,
     file_out: Path,
     verify: bool = False,
+    *,
+    trusted: bool = False,
     **kwargs: Any,
 ) -> Callable[[Path], Any]:
     """Write object to json and optionally verify read operation"""
     # write_text(jsonpickle.encode(obj, **kwargs), verify=False)
     pickler = jsonpickle.pickler.Pickler(**kwargs)
     write_json(pickler.flatten(obj), file_out, verify=False)
-    if verify and read_jsonpickle(file_out) != obj:
+    if verify and read_jsonpickle(file_out, trusted=trusted) != obj:
         raise ReadVerificationError
     return read_jsonpickle
 
@@ -142,6 +138,8 @@ def write_jsonlinespickle(
     objs: Iterable[Any],
     file_out: Path,
     verify: bool = False,
+    *,
+    trusted: bool = False,
     **kwargs: Any,
 ) -> Callable[[Path], List[Any]]:
     """Write a list of objects to json and optionally verify read operation"""
@@ -150,6 +148,8 @@ def write_jsonlinespickle(
     # write_lines(map(encode, objs), file_out, verify=False)
     pickler = jsonpickle.pickler.Pickler(**kwargs)
     write_jsonlines(map(pickler.flatten, objs), file_out, verify=False)
-    if verify and not compare_iterables(read_jsonlinespickle(file_out), objs):
+    if verify and not compare_iterables(
+        read_jsonlinespickle(file_out, trusted=trusted), objs
+    ):
         raise ReadVerificationError
     return read_jsonlinespickle

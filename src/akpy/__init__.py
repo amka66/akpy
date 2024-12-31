@@ -1,23 +1,12 @@
-#
-# IMPORTS
-#
-
+"""
+This module includes package-level definitions
+"""
 
 from .config import GeneralInfo
+from .entry import main
 
-#
-#
-# INITIALIZATION
-#
-
-
+# Package version
 __version__ = GeneralInfo().version
 
-
-#
-# MAIN
-#
-
-
-def main() -> None:
-    print(f"Hello from akpy (version {__version__})!")
+# Package main function
+_ = main  # nop - to avoid unused import warning

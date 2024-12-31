@@ -10,7 +10,13 @@ wheels/
 
 # Log files
 logs/
-*.log
+
+# Cache files
+cache/
+.llmapi.bin
+
+# Temporary files
+tmp/
 
 # Macos-generated files
 .DS_Store
