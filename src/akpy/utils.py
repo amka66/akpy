@@ -10,16 +10,24 @@ import sys
 import time
 from itertools import zip_longest
 from pathlib import Path
-from typing import Any, Iterable, Optional, Union
+from typing import Any, Iterable, Literal, Optional, Union
 
-from .config import GeneralInfo, GeneralSettings, LoggingLevel
+from .config import GeneralInfo, MyBaseSettings
 
 int0 = int  # type hint to denote integer >= 0
+LoggingLevel = Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
 
 
-# Get general info and settings
+class UtilsSettings(MyBaseSettings):
+    """This class stores module-level settings"""
+
+    logging_level_file: LoggingLevel = "DEBUG"
+    logging_level_stderr: LoggingLevel = "WARNING"
+
+
+# Get info and settings
 _info = GeneralInfo()
-_settings = GeneralSettings()
+_settings = UtilsSettings()
 
 
 def get_log_file(logger_name: str) -> Path:
@@ -32,7 +40,8 @@ def create_logger(
     *,
     log_file: Optional[Union[str, Path]] = None,
     formatter_str: str = "%(asctime)sZ - %(name)s - %(levelname)s - %(message)s",
-    level: LoggingLevel = _settings.logging_level,
+    logging_level_file: LoggingLevel = _settings.logging_level_file,
+    logging_level_stderr: LoggingLevel = _settings.logging_level_stderr,
 ) -> logging.Logger:
     """
     Create and initialize a text logger
@@ -52,11 +61,13 @@ def create_logger(
         delay=False,
     )
     file_log_handler.setFormatter(formatter)
+    file_log_handler.setLevel(logging_level_file)
     logger.addHandler(file_log_handler)
     stderr_log_handler = logging.StreamHandler(stream=sys.stderr)
     stderr_log_handler.setFormatter(formatter)
+    stderr_log_handler.setLevel(logging_level_stderr)
     logger.addHandler(stderr_log_handler)
-    logger.setLevel(level)
+    logger.setLevel(logging.DEBUG)  # ensures that handler logging levels effect
     return logger
 
 

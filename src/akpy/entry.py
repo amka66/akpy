@@ -6,32 +6,29 @@ import asyncio
 import sys
 
 import typer
-from openai import AsyncAzureOpenAI
 from pydantic import SecretStr
 from rich import print
 
-from .config import GeneralInfo, GeneralSettings, MyBaseSecrets
-from .llmapi import CACHE_FILENAME, TokenManager, client_kwargs, model_kwargs
+from .config import GeneralInfo, MyBaseSecrets, MyBaseSettings
 from .utils import create_logger
 
 
-class EntrySettings(GeneralSettings):
+class EntrySettings(MyBaseSettings):
     """This class contains module-level settings"""
 
-    system_prompt: str
+    sleep_time: float = 3.0
 
 
 class _EntrySecrets(MyBaseSecrets):
-    """This class contains module-level secrets for accessing the API"""
+    """This class contains module-level secrets"""
 
-    model_chat_completion: SecretStr
-    model_embedding: SecretStr
+    secret_message: SecretStr = SecretStr(
+        "Set your secret message at file '.secret' at the specified location. This is a stub."
+    )
 
 
-# Get general info
+# Get info, settings, and secrets
 _info = GeneralInfo()
-
-# Get module's settings and secrets
 _settings = EntrySettings()
 _secrets = _EntrySecrets()
 
@@ -40,82 +37,31 @@ _app = typer.Typer()
 
 # Create the logger
 _logger = create_logger(__name__)
+_log_message_prefix = f"system {sys.version} - package {_info.version}"
 
 
-async def _generate_output_and_embed(system_prompt: str) -> None:
+async def _async_example(sleep_time: float) -> None:
     """
-    Generate output according to the provided system prompt
-    and generate an embedding of the output
+    An example for an async function that sleeps for a given amount of time
     """
 
-    # Initialize the client
-    client = AsyncAzureOpenAI(
-        **client_kwargs(
-            token_provider=TokenManager(
-                cache_file=_info.cache_dir / CACHE_FILENAME
-            ).get_token,
-        )
-    )
-
-    # Set system message
     print()
-    messages = [
-        {
-            "role": "system",
-            "content": system_prompt,
-        },
-    ]
-    print("# Messages:")
-    print(messages)
-
-    # Generate content for the given a prompt and print it
+    print(rf'"{_secrets.secret_message.get_secret_value()}"')
     print()
-    response1 = await client.chat.completions.create(
-        **model_kwargs(
-            _secrets.model_chat_completion.get_secret_value(),
-        ),
-        messages=messages,
-        max_tokens=100,
-        temperature=0.7,
-    )
+    print("Think about it...")
     _logger.info(
-        "system %s - package %s - model %s",
-        sys.version,
-        _info.version,
-        response1.model,
+        "%s - sleeping for %s seconds - started", _log_message_prefix, sleep_time
     )
-    output = response1.choices[0].message.content
-    if not output:
-        raise RuntimeError("Failed to generate output")
-    print("# Generated:")
-    print(output)
-
-    # Generate an embedding of the output and print it
-    print()
-    response2 = await client.embeddings.create(
-        **model_kwargs(
-            _secrets.model_embedding.get_secret_value(),
-        ),
-        input=output,
-        encoding_format="float",
-    )
+    await asyncio.sleep(sleep_time)
     _logger.info(
-        "system %s - package %s - model %s",
-        sys.version,
-        _info.version,
-        response2.model,
+        "%s - sleeping for %s seconds - ended", _log_message_prefix, sleep_time
     )
-    embedding = response2.data[0].embedding
-    if not embedding:
-        raise RuntimeError("Failed to generate embedding")
-    print("# Embedding:")
-    print(str(embedding[:10])[:-1] + "...")
 
 
 @_app.command()
-def go(system_prompt: str = _settings.system_prompt) -> None:
+def go(sleep_time: float = _settings.sleep_time) -> None:
     """This is the main and only command"""
-    asyncio.run(_generate_output_and_embed(system_prompt))
+    asyncio.run(_async_example(sleep_time))
 
 
 def main() -> None:

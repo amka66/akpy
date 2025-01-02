@@ -8,21 +8,11 @@ wheels/
 .mypy_cache/
 .pytest_cache/
 
-# Log files
-logs/
-
-# Cache files
-cache/
-.llmapi.bin
-
-# Temporary files
-tmp/
-
 # Macos-generated files
 .DS_Store
 
 # Virtual environments
 .venv
 
-# Secret files
-.secret*
+# Temporary files
+tmp/
