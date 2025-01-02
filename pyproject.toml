@@ -6,39 +6,31 @@ readme = "README.md"
 authors = [
     { name = "Amir Kantor", email = "amir.kantor@gmail.com" }
 ]
-requires-python = ">=3.12"
+requires-python = ">=3.9"
 dependencies = [
-    "annotated-types>=0.7.0",
-    "cleanpy>=0.5.0",
-    "datasets[audio,vision]>=3.2.0",
-    "evaluate>=0.4.3",
-    "fastapi[all]>=0.115.6",
-    "httpx[cli,http2]>=0.28.1",
-    "ipykernel>=6.29.5",
-    "jsonlines>=4.0.0",
-    "jsonpickle>=4.0.1",
-    "matplotlib>=3.10.0",
-    "msal-extensions>=1.2.0",
-    "msal>=1.31.1",
-    "nest-asyncio>=1.6.0",
-    "nptyping[complete]>=2.5.0",
-    "numpy>=1.26.4",
-    "openai>=1.58.1",
-    "pandas>=2.2.3",
-    "platformdirs>=4.3.6",
-    "pydantic>=2.10.4",
-    "pydantic-settings>=2.7.0",
-    "pytest>=8.3.4",
-    "pyyaml>=6.0.2",
-    "scipy>=1.14.1",
-    "tiktoken>=0.8.0",
-    "toml>=0.10.2",
-    "torch>=2.5.1",
-    "torchaudio>=2.5.1",
-    "torchvision>=0.20.1",
-    "transformers>=4.47.1",
-    "typeguard>=4.4.1",
-    "typer>=0.15.1",
+    "ipykernel",
+    "nest-asyncio",
+    "platformdirs",
+    "cleanpy",
+    "rich",
+    "annotated-types",
+    "typeguard",
+    "pydantic",
+    "pydantic-settings",
+    "typer",
+    "jsonlines",
+    "pyyaml",
+    "toml",
+    "jsonpickle",
+    "numpy",
+    "nptyping[complete]",
+    "pandas",
+    "matplotlib",
+]
+
+[dependency-groups]
+dev = [
+    "pytest",
 ]
 
 [project.scripts]
