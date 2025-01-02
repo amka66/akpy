@@ -66,4 +66,4 @@ def go(sleep_time: float = _settings.sleep_time) -> None:
 
 def main() -> None:
     """Run the app"""
-    _app(prog_name=_info.project_name)
+    _app(prog_name=_info.package_name)
