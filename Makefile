@@ -33,7 +33,7 @@ ifeq ($(ENABLE_DVC),1)
 endif
 
 sync:
-	@echo "Syncing python dependencies..."
+	@echo "Syncing dependencies..."
 	uv sync --locked
 # it will first create a virtual env if it doesn't exist
 
@@ -74,7 +74,7 @@ endif
 	git push
 
 lock:
-	@echo "Locking python dependencies..."
+	@echo "Locking dependencies..."
 	UV_LOCKED=0 uv lock
 
 upgrade:

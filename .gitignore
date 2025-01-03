@@ -8,11 +8,11 @@ wheels/
 .mypy_cache/
 .pytest_cache/
 
-# Macos-generated files
-.DS_Store
-
 # Virtual environments
 .venv
+
+# Macos-generated files
+.DS_Store
 
 # Temporary files
 tmp/
