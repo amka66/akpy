@@ -2,11 +2,11 @@
 This module includes package-level definitions
 """
 
-from .config import GeneralInfo
+from .config import package_version
 from .entry import main
 
 # Package version
-__version__ = GeneralInfo().version
+__version__ = package_version
 
-# Package main function
+# Package's main function
 _ = main  # nop - to avoid unused import warning

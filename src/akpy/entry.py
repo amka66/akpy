@@ -3,14 +3,18 @@ This module (the entry point to this package) defines the main function for the 
 """
 
 import asyncio
-import sys
 
 import typer
 from pydantic import SecretStr
 from rich import print
 
-from .config import GeneralInfo, MyBaseSecrets, MyBaseSettings
-from .utils import create_logger
+from .config import (
+    MyBaseSecrets,
+    MyBaseSettings,
+    config_dir,
+    create_logger_module,
+    package_name,
+)
 
 
 class EntrySettings(MyBaseSettings):
@@ -23,12 +27,11 @@ class _EntrySecrets(MyBaseSecrets):
     """This class contains module-level secrets"""
 
     secret_message: SecretStr = SecretStr(
-        "Set your secret message at file '.secret' at the specified location. This is a stub."
+        f"Set your secret message in file '{config_dir / '.secret'}'. This is a stub."
     )
 
 
 # Get info, settings, and secrets
-_info = GeneralInfo()
 _settings = EntrySettings()
 _secrets = _EntrySecrets()
 
@@ -36,8 +39,7 @@ _secrets = _EntrySecrets()
 _app = typer.Typer()
 
 # Create the logger
-_logger = create_logger(__name__)
-_log_message_prefix = f"system {sys.version} - package {_info.version}"
+_logger = create_logger_module(__name__)
 
 
 async def _async_example(sleep_time: float) -> None:
@@ -46,16 +48,11 @@ async def _async_example(sleep_time: float) -> None:
     """
 
     print()
-    print(rf'"{_secrets.secret_message.get_secret_value()}"')
-    print()
+    print(f"{_secrets.secret_message.get_secret_value()}")
     print("Think about it...")
-    _logger.info(
-        "%s - sleeping for %s seconds - started", _log_message_prefix, sleep_time
-    )
+    _logger.info("sleeping for %s seconds - started", sleep_time)
     await asyncio.sleep(sleep_time)
-    _logger.info(
-        "%s - sleeping for %s seconds - ended", _log_message_prefix, sleep_time
-    )
+    _logger.info("sleeping for %s seconds - ended", sleep_time)
 
 
 @_app.command()
@@ -66,4 +63,4 @@ def go(sleep_time: float = _settings.sleep_time) -> None:
 
 def main() -> None:
     """Run the app"""
-    _app(prog_name=_info.package_name)
+    _app(prog_name=package_name)

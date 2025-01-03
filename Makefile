@@ -1,7 +1,7 @@
 MAKEFLAGS += --no-builtin-rules
 MAKEFLAGS += --no-builtin-variables
 
-.PHONY: pull sync clean status recent test push lock upgrade run rerun repro rerep
+.PHONY: pull sync clean test status recent push lock upgrade run rerun repro rerep
 # .EXPORT_ALL_VARIABLES:
 # .DELETE_ON_ERROR:
 # .INTERMEDIATE:

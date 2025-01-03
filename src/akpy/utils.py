@@ -1,5 +1,5 @@
 """
-Utility functions and related definitions
+This module includes utility functions and related definitions
 """
 
 import logging
@@ -10,46 +10,24 @@ import sys
 import time
 from itertools import zip_longest
 from pathlib import Path
-from typing import Any, Iterable, Literal, Optional, Union
-
-from .config import GeneralInfo, MyBaseSettings
+from typing import Any, Iterable, Literal, Union
 
 int0 = int  # type hint to denote integer >= 0
 LoggingLevel = Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
 
 
-class UtilsSettings(MyBaseSettings):
-    """This class stores module-level settings"""
-
-    logging_level_file: LoggingLevel = "DEBUG"
-    logging_level_stderr: LoggingLevel = "WARNING"
-
-
-# Get info and settings
-_info = GeneralInfo()
-_settings = UtilsSettings()
-
-
-def get_log_file(logger_name: str) -> Path:
-    """Return the log file path"""
-    return _info.log_dir / f"{logger_name}.log"
-
-
 def create_logger(
     name: str,
     *,
-    log_file: Optional[Union[str, Path]] = None,
+    log_file: Union[str, Path],
+    logging_level_file: LoggingLevel = "DEBUG",
+    logging_level_stderr: LoggingLevel = "WARNING",
     formatter_str: str = "%(asctime)sZ - %(name)s - %(levelname)s - %(message)s",
-    logging_level_file: LoggingLevel = _settings.logging_level_file,
-    logging_level_stderr: LoggingLevel = _settings.logging_level_stderr,
 ) -> logging.Logger:
     """
-    Create and initialize a text logger
+    Create and initialize a logger
     """
-    if log_file is None:
-        log_file = get_log_file(name)
-    else:
-        log_file = Path(log_file)
+    log_file = Path(log_file)
     formatter = logging.Formatter(formatter_str)
     formatter.converter = time.gmtime
     logger = logging.getLogger(name)
