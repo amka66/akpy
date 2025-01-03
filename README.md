@@ -1,20 +1,54 @@
 # akpy #
 
-> ___A blueprint for Python projects including useful definitions and utilities for Python development___
+___A blueprint for Python projects including useful definitions and utilities for Python development___
 
-This repo is primarily for personal use.
-It compiles different sources that shaped the way I work.
-It is included here for public use, in case anyone finds it useful.
+> This repo is primarily for personal use.
+> It compiles different sources that shaped the way I work.
+> It is included here for public use, in case anyone finds it useful.
 
 ## Overview ##
 
-- The repository is a Python package `akpy`, parts of which can be copied over for quickly setting up new Python projects (that is, it is intended as a blueprint for new Python projects)
-- Additionally, `akpy` can be used as a standalone tool (for example, in an interactive shell, a jupyter notebook, or a standalone script) in order to access several definitions and utilities that I find useful in different scenarios
-- Patterns of usage of some of these definitions is illustrated too
-- It is generally less advisable to import `akpy` into other packages (rather than a standalone tool), as (a) files need to be copied over (and generally edited) for it to serve as a blueprint for other projects; and (b) definitions are not comprehensive enough (that is, they might need to be edited) or stable enough for `akpy` to be used as a serious long-term dependency
+- This repository includes a Python package `akpy`, which can be used in several ways:
+    * It can serve as a **blueprint** for new Python projects -- clone or download the repository and copy over parts of it for quickly setting up a new Python project.
+    * It can serve as a **library** including useful definitions and utilities -- install the package in a Python environment and import it during an interactive Python session, in a Jupyter notebook, or in a Python script.
+    * In the future, it may serve as a standalone Python **application** (tool) -- install the package in a possibly isolated Python environment and invoke it during an interactive session with the operating-system's shell or in an shell script.
+- It is generally *not* advisable to announce `akpy` as a dependency of other packages, as (a) for simplicity, most of the content is facilitated by copying over files rather than importing; and (b) definitions are generally not comprehensive enough (they might need to be edited) or stable enough for `akpy` to be used as a serious long-term dependency.
+- Patterns of usage of `akpy` are illustrated in a demo application included as part of the package (a packaged application).
 
-## Prerequisites ##
+## Getting Started ##
 
-- To import `akpy`, install the package and all dependencies using `pip` or equivalent (`pipx`, `uv tool`, etc.) by running `pip install git+https://github.com/amka66/akpy.git` (similarly for other package managers)
-- The repository was set up using `uv`, which is the recommended package manager when using `akpy` as a blueprint for other projects
-- Additional functionality requires a Docker engine, the (in)famous make utility, and/or VSCode, which are optional
+### Blueprint ###
+
+1. Clone the repository, e.g., by running
+```
+$ git clone https://github.com/amka66/akpy.git
+```
+2. Copy over the relevant files.
+3. Edit the files as needed.
+
+Because `akpy` was set up using [`uv`](https://docs.astral.sh/uv/) -- it is the recommended package manager for the cloned project too.
+Also note that the repo includes development environment settings; particularly, `git`, `VSCode`, `make`, `DVC`, etc.
+
+### Library ###
+
+1. Install the package in Python environment using a package manager such as [`pip`](https://pip.pypa.io/en/stable/) or `uv`, e.g., by running
+```
+$ pip install git+https://github.com/amka66/akpy.git
+```
+or
+```
+$ uv add git+https://github.com/amka66/akpy.git
+```
+2. In Python, import the package (`import akpy`) or parts of it.
+
+### Application ###
+
+1. Install the package in a possibly isolated Python environment using a package manager such as [`pipx`](https://pipx.pypa.io/stable/) or `uv`, e.g., by running
+```
+$ pipx install git+https://github.com/amka66/akpy.git
+```
+or
+```
+$ uv tool install git+https://github.com/amka66/akpy.git
+```
+2. To run it, type `akpy` in the OS shell.
