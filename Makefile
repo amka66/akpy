@@ -1,7 +1,7 @@
 MAKEFLAGS += --no-builtin-rules
 MAKEFLAGS += --no-builtin-variables
 
-.PHONY: pull sync clean test status recent push lock upgrade run rerun repro rerep
+.PHONY: pull clean sync test status recent push lock upgrade run rerun repro rerep
 # .EXPORT_ALL_VARIABLES:
 # .DELETE_ON_ERROR:
 # .INTERMEDIATE:
@@ -32,16 +32,16 @@ ifeq ($(ENABLE_DVC),1)
 	-uv run dvc checkout
 endif
 
-sync:
-	@echo "Syncing dependencies..."
-	uv sync --locked
-# it will first create a virtual env if it doesn't exist
-
 clean:
 	@echo "Deleting temporary files..."
-	find . -type f -name '.DS_Store' -delete || true
 	uv run cleanpy --include-builds .
 	find . -type d -name '.ipynb_checkpoints' -delete || true
+	find . -type f -name '.DS_Store' -delete || true
+
+sync:
+	@echo "Syncing dependencies from lock file..."
+	uv sync
+# it will first create a virtual env if it doesn't exist
 
 ifeq ($(ENABLE_TESTS),1)
 test:
@@ -63,7 +63,7 @@ ifeq ($(ENABLE_DVC),1)
 	uv run dvc status --cloud
 endif
 
-recent:	pull sync clean test status
+recent:	pull clean sync test status
 # it will first create a virtual env if it doesn't exist
 
 push: test
@@ -74,7 +74,7 @@ endif
 	git push
 
 lock:
-	@echo "Locking dependencies..."
+	@echo "Resolving and locking dependencies..."
 	UV_LOCKED=0 uv lock
 
 upgrade:
@@ -82,14 +82,14 @@ upgrade:
 	UV_LOCKED=0 uv lock --upgrade
 
 run:
-	@echo "Running main (args=$(ARGS))..."
+	@echo "Running $(ARGS)..."
 	uv run $(ARGS)
 
 rerun: recent run
 
 ifeq ($(ENABLE_DVC),1)
 repro:
-	@echo "Reproducing pipeline $(PI)..."
+	@echo "Reproducing $(PI)..."
 	uv run dvc repro $(PI)
 
 rerep: recent repro status
