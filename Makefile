@@ -1,7 +1,7 @@
 MAKEFLAGS += --no-builtin-rules
 MAKEFLAGS += --no-builtin-variables
 
-.PHONY: pull clean sync test status recent push lock upgrade run rerun repro rerep
+.PHONY: pull sync clean lint test status recent push reformat lock upgrade run rerun repro rerep
 # .EXPORT_ALL_VARIABLES:
 # .DELETE_ON_ERROR:
 # .INTERMEDIATE:
@@ -10,7 +10,9 @@ MAKEFLAGS += --no-builtin-variables
 
 export UV_LOCKED ?= 1
 export UV_NO_SYNC ?= 1
-ENABLE_TESTS ?= 1
+ENABLE_FORMATTING ?= 1
+ENABLE_LINTING ?= 1
+ENABLE_TESTING ?= 1
 ENABLE_DVC ?= 0
 SYNC_DVC_CACHE ?= 0
 
@@ -32,18 +34,31 @@ ifeq ($(ENABLE_DVC),1)
 	-uv run dvc checkout
 endif
 
+sync:
+	@echo "Syncing dependencies from lock file..."
+	uv sync
+# it will first create a virtual env if it doesn't exist
+
 clean:
 	@echo "Deleting temporary files..."
 	uv run cleanpy --include-builds .
 	find . -type d -name '.ipynb_checkpoints' -delete || true
 	find . -type f -name '.DS_Store' -delete || true
 
-sync:
-	@echo "Syncing dependencies from lock file..."
-	uv sync
-# it will first create a virtual env if it doesn't exist
 
-ifeq ($(ENABLE_TESTS),1)
+ifeq ($(ENABLE_LINTING),1)
+lint:
+	@echo "Checking and linting source files..."
+	uv run black --check --diff .
+	uv run isort --check --diff .
+	uv run ruff check .
+	uv run mypy .
+	uv run pyright .
+	uv run pylint .
+	uv run bandit -r . -c pyproject.toml
+endif
+
+ifeq ($(ENABLE_TESTING),1)
 test:
 	@echo "Running tests..."
 	uv run pytest
@@ -63,15 +78,23 @@ ifeq ($(ENABLE_DVC),1)
 	uv run dvc status --cloud
 endif
 
-recent:	pull clean sync test status
+recent:	pull sync clean lint test status
 # it will first create a virtual env if it doesn't exist
 
-push: test
+push: lint test
 	@echo "Pushing file changes..."
 ifeq ($(ENABLE_DVC),1)
 	uv run dvc push $(RUN_CACHE)
 endif
 	git push
+
+ifeq ($(ENABLE_FORMATTING),1)
+reformat:
+	@echo "Formatting source files..."
+	uv run black .
+	uv run isort .
+	uv run ruff format .
+endif
 
 lock:
 	@echo "Resolving and locking dependencies..."
