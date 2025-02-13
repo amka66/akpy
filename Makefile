@@ -103,7 +103,7 @@ lock:
 
 upgrade:
 	@echo "==> Upgrading locked dependencies..."
-	UV_LOCKED=0 uv lock --upgrade
+	env -u UV_LOCKED uv lock --upgrade
 
 run:
 	@echo "==> Running $(ARGS)..."

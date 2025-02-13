@@ -67,11 +67,11 @@ typeCheckingMode = "strict"
 
 [tool.pylint]
 ignore = [".venv", ".git", "src"]  # skip pylint
-# ignore = [".venv", ".git"]
+# ignore = [".venv", ".git"]  # don't skip pylint
 
 [tool.bandit]
 exclude_dirs = ["."]  # skip bandit
-# exclude_dirs = [".venv", ".git"]
+# exclude_dirs = [".venv", ".git"]  # don't skip bandit
 
 [tool.pytest.ini_options]
 # addopts = "--collect-only"  # skip pytest
