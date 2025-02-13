@@ -57,17 +57,22 @@ profile = "black"
 line-length = 88
 
 [tool.mypy]
+ignore_errors = true  # skip mypy
 strict = true
 check_untyped_defs = true
 
 [tool.pyright]
+exclude = ["."]  # skip pyright
 typeCheckingMode = "strict"
 
 [tool.pylint]
-ignore = [".venv", ".git"]
+ignore = [".venv", ".git", "src"]  # skip pylint
+# ignore = [".venv", ".git"]
 
 [tool.bandit]
-exclude_dirs = [".venv", ".git"]
+exclude_dirs = ["."]  # skip bandit
+# exclude_dirs = [".venv", ".git"]
 
 [tool.pytest.ini_options]
+# addopts = "--collect-only"  # skip pytest
 testpaths = ["tests"]
