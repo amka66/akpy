@@ -8,6 +8,7 @@ import logging
 import sys
 from abc import ABC
 from importlib.metadata import metadata
+from importlib.resources import files
 from pathlib import Path
 from typing import Optional
 
@@ -21,29 +22,34 @@ from .utils import LoggingLevel, create_logger
 # Get package-level information
 #
 
+
 # From package build metadata, possibly originating in pyproject.toml:
-package_name_raw: Optional[str] = __spec__.parent
-if not isinstance(package_name_raw, str):
-    raise ValueError("Package name not found")
-if not package_name_raw.isidentifier():
-    raise ValueError("Package name is invalid")
-package_name: str = package_name_raw
-_package_metadata = metadata(package_name)
-if _package_metadata["Name"] != package_name:
-    raise ValueError("Package name mismatch")
+package_identifier: Optional[str] = __spec__.parent
+if not isinstance(package_identifier, str):
+    raise ValueError("Package identifier not found")
+if not package_identifier.isidentifier():
+    raise ValueError("Package identifier is invalid")
+_package_metadata = metadata(package_identifier)
+package_name: str = _package_metadata["Name"]
+if package_name.replace("-", "_") != package_identifier:
+    raise ValueError("Package name and package identifier mismatch")
 package_version: str = _package_metadata["Version"]
+system_version: str = sys.version.replace("\n", "")
+package_dir = Path(files(package_identifier)).resolve()
+project_dir = package_dir.parent.parent
 
 # Platform-specific directories:
-config_dir = Path(user_config_dir(package_name, ensure_exists=True))
-log_dir = Path(user_log_dir(package_name, ensure_exists=True))
-cache_dir = Path(user_cache_dir(package_name, ensure_exists=True))
+config_dir = Path(user_config_dir(package_name, ensure_exists=True)).resolve()
+log_dir = Path(user_log_dir(package_name, ensure_exists=True)).resolve()
+cache_dir = Path(user_cache_dir(package_name, ensure_exists=True)).resolve()
 
 
 #
 # Base definitions toward module-level concrete definitions
 #
 
-_logging_formatter_str = f"%(asctime)sZ - %(name)s - %(levelname)s - system {sys.version} - {package_name} {package_version} - %(message)s"
+
+_logging_formatter_str = f"%(asctime)sZ - %(name)s - %(levelname)s - system {system_version} - {package_name} {package_version} - %(message)s"
 
 
 def create_logger_module(
@@ -84,9 +90,3 @@ class MyBaseSecrets(BaseSettings, ABC):
         extra="ignore",
         frozen=True,
     )
-
-
-#
-# Possibly concrete package-level classes for settings and secrets below
-#
-#
