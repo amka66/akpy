@@ -96,7 +96,8 @@ format:
 	@echo "==> Formatting source files..."
 	uv run black .
 	uv run isort .
-	uv run ruff format .
+	# uv run ruff format .
+# to avoid inconsistencies while formatting sources files, ruff is only used in 'check' mode
 
 lock:
 	@echo "==> Resolving and locking dependencies..."
