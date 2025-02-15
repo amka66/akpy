@@ -1,5 +1,5 @@
 """
-Test file
+This module includes tests for akpy.entry
 """
 
 from akpy.entry import go

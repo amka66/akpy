@@ -1,5 +1,5 @@
 """
-Functions for reading all sorts of data files.
+This module includes functions for reading all sorts of data files.
 
 All functions must conform to the type `Callable[[Path], Any]`,
 possibly including more parameters (and possibly a specialization

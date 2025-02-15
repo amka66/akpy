@@ -1,5 +1,5 @@
 """
-Functions for writing all sorts of data files.
+This module includes functions for writing all sorts of data files.
 
 All functions must return a function to read the newly written file,
 after optionally verifying that it indeed returns the proper (equal) object.
